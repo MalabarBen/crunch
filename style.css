@@ -1,0 +1,109 @@
+:root {
+    --background-color: #f0f2f5;
+    --text-color: #1a1a1a;
+    --primary-accent: #ffa500; /* Orange */
+    --secondary-accent: #0052cc; /* Blue */
+    --light-gray: #e0e0e0;
+    --white: #ffffff;
+    --text-light: #6c757d;
+    --success-green: #28a745;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    overscroll-behavior: contain;
+}
+
+#app-container { max-width: 450px; margin: 0 auto; background-color: var(--white); min-height: 100vh; display: flex; flex-direction: column; }
+.page { display: none; flex-grow: 1; padding: 20px 20px 100px 20px; }
+.page.active { display: block; }
+header { margin-bottom: 24px; text-align: center; }
+header h1 { font-size: 1.5rem; font-weight: 600; }
+
+/* Day Complete Visual Cue */
+#day-header.day-complete::after { content: ' ✅'; font-size: 1.2rem; vertical-align: middle; }
+.total-banked-text.day-complete { color: var(--success-green); }
+
+/* Wheel */
+.progress-wheel-container { display: flex; justify-content: center; margin-bottom: 24px; touch-action: none; }
+.progress-wheel { position: relative; width: 250px; height: 250px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--primary-accent) 0deg, var(--light-gray) 0deg); }
+.progress-inner { width: 210px; height: 210px; background-color: var(--white); border-radius: 50%; display: grid; place-items: center; font-size: 4rem; font-weight: bold; color: var(--secondary-accent); z-index: 2; }
+.wheel-handle { position: absolute; top: 0; left: 50%; width: 40px; height: 40px; transform: translate(-50%, -50%); transform-origin: 50% 125px; background-color: var(--secondary-accent); border: 4px solid var(--white); border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: grab; z-index: 10; }
+.wheel-handle:active { cursor: grabbing; }
+
+.total-banked-text { text-align: center; font-size: 1.2rem; font-weight: 600; margin-bottom: 24px; transition: color 0.3s ease; }
+.banking-controls { display: flex; justify-content: center; margin-bottom: 30px; }
+.cta-button { padding: 14px 24px; border: none; background-color: var(--primary-accent); color: var(--white); font-size: 1rem; font-weight: 600; border-radius: 25px; cursor: pointer; transition: background-color 0.2s; width: 80%; max-width: 300px; min-height: 50px; }
+.cta-button:disabled { background-color: #cccccc; color: #666; cursor: not-allowed; }
+
+/* Exercise Cards */
+#exercise-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.exercise-item { background-color: var(--background-color); padding: 16px 12px; border-radius: 12px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; min-height: 120px; }
+.exercise-item.selected { border-color: var(--primary-accent); box-shadow: 0 4px 12px rgba(0, 82, 204, 0.1); }
+.exercise-item .exercise-icon svg { width: 30px; height: 30px; color: var(--secondary-accent); }
+.exercise-item .exercise-name { font-size: 0.9rem; color: var(--text-light); font-weight: 500; margin-top: 8px; }
+.exercise-item .exercise-banked-count { font-size: 1.75rem; font-weight: 700; color: var(--text-color); margin-top: 4px; }
+
+/* Stats Page Styles */
+.stats-scroll-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.stats-scroll-container::-webkit-scrollbar { display: none; }
+.stats-scroll-container { scrollbar-width: none; }
+
+.stats-days-wrapper { display: flex; align-items: flex-end; gap: 20px; width: max-content; padding: 0 20px; height: 210px; }
+
+.stats-day-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    width: calc((100vw - 180px) / 7);
+    max-width: 45px;
+    height: 100%;
+}
+.stats-day-item.interactive { cursor: pointer; }
+.stats-day-item.future-day { opacity: 0.6; }
+
+/* NEW: Style for the target number above the bar */
+.stats-target-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-light);
+}
+.stats-day-item.today .stats-target-label { color: var(--text-color); }
+
+
+.stats-bar-container {
+    width: 100%;
+    height: 150px;
+    background-color: var(--light-gray);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column-reverse;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+.stats-day-item.interactive:hover .stats-bar-container { transform: scale(1.05); }
+
+.stats-bar-banked { width: 100%; background-color: var(--primary-accent); transition: height 0.5s ease-out; }
+
+.stats-day-label { font-size: 0.8rem; font-weight: 500; color: var(--text-light); white-space: nowrap; }
+.stats-day-item.today .stats-day-label { font-weight: 700; color: var(--primary-accent); }
+
+/* Stats Detail View */
+.stats-detail-view { margin-top: 10px; padding: 16px; background-color: var(--background-color); border-radius: 12px; min-height: 100px; }
+.stats-detail-view .detail-header { font-size: 1.2rem; margin-bottom: 12px; }
+.stats-detail-view .detail-list { list-style: none; padding: 0; }
+.stats-detail-view .detail-list-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--light-gray); font-size: 1rem; }
+.stats-detail-view .detail-list-item:last-child { border-bottom: none; }
+.stats-detail-view .detail-list-item .reps { font-weight: 600; }
+.stats-detail-view .placeholder { color: var(--text-light); text-align: center; padding: 20px; }
+
+/* Navigation */
+nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 450px; margin: 0 auto; background-color: var(--white); border-top: 1px solid var(--light-gray); display: flex; justify-content: space-around; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+.nav-button { background: none; border: none; cursor: pointer; color: #8e8e93; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.75rem; }
+.nav-button.active { color: var(--primary-accent); }
