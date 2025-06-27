@@ -1,7 +1,8 @@
 {
     "name": "Daily Rep Challenge",
     "short_name": "RepChallenge",
-    "start_url": "/index.html",
+    "start_url": "/crunch/",
+"scope": "/crunch/",
     "display": "standalone",
     "background_color": "#f0f2f5",
     "theme_color": "#ffffff",
