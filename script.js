@@ -5,14 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const REPS_PER_ROUND = 10;
     const DEGREES_PER_REP = 360 / REPS_PER_ROUND;
     const FUTURE_DAYS_TO_SHOW = 10;
-    const EXERCISES = [
-        { id: 'push-ups', name: 'Push-ups', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18"/><path d="m4 17 6-6 6 6"/><path d="M4 21h16"/></svg>'},
-        { id: 'squats', name: 'Squats', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10l7-7 7 7"/><path d="M12 17V3"/><path d="M5 21h14"/></svg>'},
-        { id: 'sit-ups', name: 'Sit-ups', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 14 6-6 6 6-6 6-6-6Z"/><path d="M10 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="m18 14 4-4"/><path d="m14 18 4 4"/></svg>'},
-        { id: 'punches', name: 'Punches', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L20 12l-5.5-5.5"/><path d="M4 12h16"/></svg>'},
-        { id: 'tricep-dips', name: 'Tricep Dips', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-6"/><path d="m15 13-3-3-3 3"/><path d="M12 13V3"/><path d="M21 2h-6"/><path d="M3 2h6"/></svg>'},
-        { id: 'step-ups', name: 'Step-ups', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="m8 16 4-4 4 4"/><path d="M12 16V4"/></svg>'}
-    ];
+    // UPDATED: Changed icons from invalid SVG literals to valid image tags pointing to PNGs.
+const EXERCISES = [
+  { id:'push-ups',     name:'Push-ups',     icon:'<img src="assets/push-ups.png" alt="Push-ups">' },
+  { id:'squats',       name:'Squats',       icon:'<img src="assets/squats.png"   alt="Squats">' },
+  { id:'sit-ups',      name:'Sit-ups',      icon:'<img src="assets/sit-up.png"   alt="Sit-ups">' },
+  { id:'punches',      name:'Punches',      icon:'<img src="assets/punches.png"  alt="Punches">' },
+  { id:'tricep-dips',  name:'Dips',  icon:'<img src="assets/dips.png"      alt="Dips">' },
+  { id:'step-ups',     name:'Step-ups',     icon:'<img src="assets/steps.png"     alt="Steps">' }
+];
+
     
     // --- DOM ELEMENTS ---
     const dayHeader = document.getElementById('day-header');
@@ -92,7 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
             item.className = 'exercise-item';
             if (state.selectedExercise === exInfo.id) item.classList.add('selected');
             item.innerHTML = `<div class="exercise-icon">${exInfo.icon}</div><div class="exercise-name">${exInfo.name}</div><div class="exercise-banked-count">${bankedReps}</div>`;
-            item.addEventListener('click', () => { state.selectedExercise = exInfo.id; renderBankPage(todayString); updateWheelUI(0, 0); });
+            item.addEventListener('click', () => { 
+                state.selectedExercise = exInfo.id; 
+                totalRotation = 0; // Reset wheel on new selection
+                repsFromWheel = 0;
+                renderBankPage(todayString); 
+                updateWheelUI(0, 0); 
+            });
             exerciseBreakdownContainer.appendChild(item);
         });
     }
@@ -126,12 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         sortedDates.forEach(date => {
             const dayData = state.history[date];
+            if (!dayData) return; // Add guard for missing data
             const item = document.createElement('div');
             item.className = 'stats-day-item';
 
             const percentage = Math.min(100, (dayData.totalBanked / dayData.totalTarget) * 100);
 
-            // UPDATED: Added stats-target-label div
             item.innerHTML = `
                 <div class="stats-target-label">${dayData.totalTarget}</div>
                 <div class="stats-bar-container">
@@ -140,12 +148,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="stats-day-label">${formatStatsLabel(date, todayString)}</div>
             `;
 
-            if (date > todayString) {
+            if (new Date(date) > new Date(todayString)) {
                 item.classList.add('future-day');
             } else {
                 item.classList.add('interactive');
                 if (date === todayString) item.classList.add('today');
-                item.addEventListener('click', () => renderStatsDetail(date));
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.stats-day-item').forEach(el => el.classList.remove('selected-stat'));
+                    item.classList.add('selected-stat');
+                    renderStatsDetail(date)
+                });
             }
             statsDaysWrapper.appendChild(item);
         });
@@ -155,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (todayElement) {
                 const scrollLeft = todayElement.offsetLeft - (statsScrollContainer.offsetWidth / 2) + (todayElement.offsetWidth / 2);
                 statsScrollContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+                todayElement.click(); // Automatically show today's details
             }
         }, 100);
     }
