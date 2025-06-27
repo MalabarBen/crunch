@@ -1,20 +1,19 @@
 // UPDATED cache version to v6 to force a refresh
 const CACHE_NAME = 'rep-challenge-cache-v6'; 
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/script.js',
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
-  // ADDED: New PNG icons for offline use
-  '/icons/push-ups.png',
-  '/icons/squats.png',
-  '/icons/sit-ups.png',
-  '/icons/punches.png',
-  '/icons/tricep-dips.png',
-  '/icons/step-ups.png',
+  '/crunch/',
+  '/crunch/index.html',
+  '/crunch/style.css',
+  '/crunch/script.js',
+  '/crunch/manifest.json',
+  '/crunch/icons/icon-192x192.png',
+  '/crunch/icons/icon-512x512.png',
+  '/crunch/icons/push-ups.png',
+  '/crunch/icons/squats.png',
+  '/crunch/icons/sit-ups.png',
+  '/crunch/icons/punches.png',
+  '/crunch/icons/tricep-dips.png',
+  '/crunch/icons/step-ups.png',
   'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js'
 ];
 
