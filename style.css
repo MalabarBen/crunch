@@ -44,7 +44,13 @@ header h1 { font-size: 1.5rem; font-weight: 600; }
 #exercise-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .exercise-item { background-color: var(--background-color); padding: 16px 12px; border-radius: 12px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; min-height: 120px; }
 .exercise-item.selected { border-color: var(--primary-accent); box-shadow: 0 4px 12px rgba(0, 82, 204, 0.1); }
-.exercise-item .exercise-icon svg { width: 30px; height: 30px; color: var(--secondary-accent); }
+/* UPDATED: Changed svg to img */
+.exercise-item .exercise-icon img {
+    width: 30px;
+    height: 30px;
+    /* ADD THIS LINE to slightly round the corners of the icon */
+    border-radius: 4px; 
+}
 .exercise-item .exercise-name { font-size: 0.9rem; color: var(--text-light); font-weight: 500; margin-top: 8px; }
 .exercise-item .exercise-banked-count { font-size: 1.75rem; font-weight: 700; color: var(--text-color); margin-top: 4px; }
 
@@ -68,7 +74,6 @@ header h1 { font-size: 1.5rem; font-weight: 600; }
 .stats-day-item.interactive { cursor: pointer; }
 .stats-day-item.future-day { opacity: 0.6; }
 
-/* NEW: Style for the target number above the bar */
 .stats-target-label {
     font-size: 0.9rem;
     font-weight: 500;
@@ -86,11 +91,13 @@ header h1 { font-size: 1.5rem; font-weight: 600; }
     flex-direction: column-reverse;
     overflow: hidden;
     transition: transform 0.2s ease;
+    border: 2px solid transparent; /* Add for selection highlight */
 }
 .stats-day-item.interactive:hover .stats-bar-container { transform: scale(1.05); }
+/* ADDED: Style for the selected bar */
+.stats-day-item.selected-stat .stats-bar-container { border-color: var(--secondary-accent); }
 
 .stats-bar-banked { width: 100%; background-color: var(--primary-accent); transition: height 0.5s ease-out; }
-
 .stats-day-label { font-size: 0.8rem; font-weight: 500; color: var(--text-light); white-space: nowrap; }
 .stats-day-item.today .stats-day-label { font-weight: 700; color: var(--primary-accent); }
 
