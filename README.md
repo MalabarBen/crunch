@@ -2,7 +2,11 @@
 
 **Crunch Challenge** is a simple Progressive Web App (PWA) fitness tracker built with vanilla HTML, CSS, and JavaScript. It helps users complete and bank daily exercise reps, track progress, and view stats — all installable as a standalone app on mobile and desktop.
 
-![Home screen showing progress wheel](assets/IMG_8633.PNG)
+### Home Screen
+<img src="assets/IMG_8633.PNG" alt="Home screen showing progress wheel" width="300"/>
+### Stat View
+<img src="assets/IMG_8634.PNG" alt="Home screen showing progress wheel" width="300"/>
+
 
 ---
 
